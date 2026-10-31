@@ -1,0 +1,185 @@
+P<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTools Hub - Developer & Designer Utilities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-xl text-white">
+                <i class="fa-solid fa-code text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg text-white">DevTools Hub</h1>
+                <p class="text-xs text-slate-400">Fast Developer Utility Suite</p>
+            </div>
+        </div>
+        <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 100% Client Side
+        </span>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto p-6 md:p-10 space-y-8">
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
+            <button onclick="openTab('pass')" id="tab-pass" class="nav-btn px-4 py-2.5 rounded-xl font-medium text-sm transition bg-blue-600 text-white">
+                <i class="fa-solid fa-key mr-2"></i> Password Generator
+            </button>
+            <button onclick="openTab('json')" id="tab-json" class="nav-btn px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-brackets-curly mr-2"></i> JSON Formatter
+            </button>
+            <button onclick="openTab('b64')" id="tab-b64" class="nav-btn px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-shield-halved mr-2"></i> Base64 Encoder
+            </button>
+        </div>
+
+        <!-- TOOL 1: PASSWORD GENERATOR -->
+        <section id="tool-pass" class="tool-card bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-lock text-blue-500"></i> Secure Password & API Key Generator
+            </h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Password Length: <span id="len-val" class="text-blue-400 font-bold">16</span></label>
+                    <input type="range" id="pass-len" min="8" max="64" value="16" oninput="document.getElementById('len-val').innerText = this.value" class="w-full accent-blue-600 cursor-pointer">
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-slate-300">
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="chk-num" checked class="rounded accent-blue-600"> Numbers (0-9)</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="chk-sym" checked class="rounded accent-blue-600"> Symbols (!@#$)</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="chk-cap" checked class="rounded accent-blue-600"> Uppercase (A-Z)</label>
+                </div>
+
+                <button type="button" onclick="makePassword()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrows-rotate"></i> Generate Password
+                </button>
+
+                <div class="flex gap-2">
+                    <input type="text" id="pass-result" readonly placeholder="Generated password will appear here..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-emerald-400 font-mono text-sm focus:outline-none">
+                    <button type="button" onclick="copyField('pass-result')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-5 rounded-xl border border-slate-700 font-medium text-sm flex items-center gap-2">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOL 2: JSON FORMATTER -->
+        <section id="tool-json" class="tool-card hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-code text-blue-500"></i> JSON Beautifier & Validator
+            </h2>
+            <textarea id="json-input" rows="6" placeholder='Paste raw unformatted JSON here (e.g. {"name":"Ahmad","role":"developer"})' class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 font-mono text-xs focus:outline-none focus:border-blue-500"></textarea>
+
+            <div class="flex flex-wrap gap-3">
+                <button type="button" onclick="formatJSON()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-align-left"></i> Beautify JSON
+                </button>
+                <button type="button" onclick="minifyJSON()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-5 py-2.5 rounded-xl border border-slate-700 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-compress"></i> Minify JSON
+                </button>
+            </div>
+        </section>
+
+        <!-- TOOL 3: BASE64 ENCODER -->
+        <section id="tool-b64" class="tool-card hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-shield-cat text-blue-500"></i> Base64 Text Encoder & Decoder
+            </h2>
+            <textarea id="b64-input" rows="5" placeholder="Enter text to Encode or Base64 string to Decode..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 font-mono text-xs focus:outline-none focus:border-blue-500"></textarea>
+
+            <div class="flex flex-wrap gap-3">
+                <button type="button" onclick="runB64(true)" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-lock"></i> Encode to Base64
+                </button>
+                <button type="button" onclick="runB64(false)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-lock-open"></i> Decode Base64
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function openTab(id) {
+            document.querySelectorAll('.tool-card').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-400 hover:bg-slate-800";
+            });
+
+            document.getElementById('tool-' + id).classList.remove('hidden');
+            document.getElementById('tab-' + id).className = "nav-btn px-4 py-2.5 rounded-xl font-medium text-sm transition bg-blue-600 text-white";
+        }
+
+        function makePassword() {
+            const len = parseInt(document.getElementById('pass-len').value);
+            const num = document.getElementById('chk-num').checked;
+            const sym = document.getElementById('chk-sym').checked;
+            const cap = document.getElementById('chk-cap').checked;
+
+            let chars = "abcdefghijklmnopqrstuvwxyz";
+            if (num) chars += "0123456789";
+            if (sym) chars += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+            if (cap) chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            let res = "";
+            for (let i = 0; i < len; i++) {
+                res += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('pass-result').value = res;
+        }
+
+        function formatJSON() {
+            const area = document.getElementById('json-input');
+            try {
+                const parsed = JSON.parse(area.value);
+                area.value = JSON.stringify(parsed, null, 4);
+            } catch (e) {
+                alert("Invalid JSON format! Check your syntax.");
+            }
+        }
+
+        function minifyJSON() {
+            const area = document.getElementById('json-input');
+            try {
+                const parsed = JSON.parse(area.value);
+                area.value = JSON.stringify(parsed);
+            } catch (e) {
+                alert("Invalid JSON format!");
+            }
+        }
+
+        function runB64(encode) {
+            const area = document.getElementById('b64-input');
+            try {
+                if (encode) {
+                    area.value = btoa(area.value);
+                } else {
+                    area.value = atob(area.value);
+                }
+            } catch (e) {
+                alert("Error processing Base64 data!");
+            }
+        }
+
+        function copyField(id) {
+            const val = document.getElementById(id).value;
+            if(!val) return;
+            navigator.clipboard.writeText(val).then(() => alert('Copied to clipboard!'));
+        }
+
+        // Auto generate one password on load
+        makePassword();
+    </script>
+</body>
+</html>
